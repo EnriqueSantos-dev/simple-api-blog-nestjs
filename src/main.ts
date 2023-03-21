@@ -1,19 +1,26 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { PrismaService } from './prisma/prisma.service';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/v1');
+	const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      skipNullProperties: true,
-      whitelist: true,
-    }),
-  );
+	app.enableCors();
+	app.use(cookieParser());
+	app.setGlobalPrefix('api/v1');
+	app.useGlobalPipes(
+		new ValidationPipe({
+			skipNullProperties: true,
+			whitelist: true,
+		}),
+	);
 
-  await app.listen(3000);
+	const prismaService = app.get(PrismaService);
+	await prismaService.enableShutdownHooks(app);
+
+	await app.listen(3000);
 }
 
 bootstrap();

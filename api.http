@@ -1,0 +1,62 @@
+# API RESTful com NodeJS, NestJS, Prisma e PostgreSQL
+
+# Auth Controller requests
+
+POST http://localhost:3000/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "name": "Enrique Santos de Oliveira",
+  "email": "santosenrique10@gmail.com",
+  "password": "123456"
+}
+
+###
+
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "santosenrique10@gmail.com",
+  "password": "123456" 
+}
+
+###
+
+GET  http://localhost:3000/api/v1/auth/me
+
+###
+
+# Post Controller requests
+
+POST http://localhost:3000/api/v1/posts
+Content-Type: application/json
+
+{
+  "title": "Post 1",
+  "content": "Content 1",
+  "authorId": "75cae36a-fe88-4676-a31d-9931651f250d"
+}
+
+###
+
+PUT http://localhost:3000/api/v1/posts/update/d1fbc7f1-acf2-4069-996b-6527597f3eb5
+Content-Type: application/json
+
+{
+  "id": "d1fbc7f1-acf2-4069-996b-6527597f3eb5",
+  "title": "Post 1 atualizado",
+  "content": "Content 1 atualizado"
+}
+
+###
+
+GET http://localhost:3000/api/v1/posts
+
+###
+
+GET http://localhost:3000/api/v1/posts/d1fbc7f1-acf2-4069-996b-6527597f3eb5
+
+###
+
+PATCH http://localhost:3000/api/v1/posts/publish/d1fbc7f1-acf2-4069-996b-6527597f3eb5
