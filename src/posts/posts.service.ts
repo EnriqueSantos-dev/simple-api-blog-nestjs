@@ -30,7 +30,7 @@ export class PostsService {
 	}: UpdatePostInputDto & { id: string }): Promise<PostModel> {
 		const postExists = await this.prisma.post.findUnique({ where: { id } });
 
-		if (!postExists) throw new NotFoundException('Post not founds');
+		if (!postExists) throw new NotFoundException('Post not found');
 
 		return await this.prisma.post.update({
 			where: { id },
