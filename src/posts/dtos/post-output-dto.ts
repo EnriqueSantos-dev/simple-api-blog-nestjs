@@ -1,4 +1,4 @@
-export interface GetPostsOutputDto {
+export interface PostOutputDto {
 	id: string;
 	title: string;
 	content: string;

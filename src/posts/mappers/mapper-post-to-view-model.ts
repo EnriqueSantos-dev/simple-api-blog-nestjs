@@ -1,10 +1,10 @@
-import { GetPostsOutputDto } from '../dtos';
+import { PostOutputDto } from '../dtos';
 import { PostModel } from '../models/post.model';
 
 export abstract class MapperPostToViewModel {
 	static map(
 		post: PostModel & { author: { id: string; name: string } },
-	): GetPostsOutputDto {
+	): PostOutputDto {
 		return {
 			id: post.id,
 			title: post.title,
