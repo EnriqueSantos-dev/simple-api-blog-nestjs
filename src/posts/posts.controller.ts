@@ -14,7 +14,7 @@ import {
 import {
 	CreatePostInputDto,
 	CreatePostOutputDto,
-	GetPostsOutputDto,
+	PostOutputDto,
 	UpdatePostInputDto,
 	UpdatePostOutputDto,
 } from './dtos';
@@ -27,9 +27,13 @@ export class PostsController {
 
 	@Post()
 	async createPost(
+		@User('userId') authorId: string,
 		@Body() createPostDto: CreatePostInputDto,
 	): Promise<CreatePostOutputDto> {
-		const post = await this.postsService.createPost(createPostDto);
+		const post = await this.postsService.createPost({
+			...createPostDto,
+			authorId,
+		});
 
 		return {
 			id: post.id,
@@ -61,20 +65,20 @@ export class PostsController {
 	}
 
 	@Get()
-	async getAllPosts(): Promise<GetPostsOutputDto[]> {
+	async getAllPosts(): Promise<PostOutputDto[]> {
 		return this.postsService.getAllPosts();
 	}
 
-	@Get(':id')
-	async getPostById(@Param('id') id: string) {
-		return this.postsService.getPostById(id);
+	@Get('author')
+	async getPostsByAuthorId(
+		@User('userId') authorId: string,
+	): Promise<Omit<PostOutputDto, 'author'>[]> {
+		return this.postsService.getPostsByAuthorId(authorId);
 	}
 
-	@Get('author/:id')
-	async getPostsByAuthorId(
-		@User('userId') userId: string,
-	): Promise<GetPostsOutputDto[]> {
-		return this.postsService.getPostsByAuthorId(userId);
+	@Get(':id')
+	async getPostById(@Param('id') id: string): Promise<PostOutputDto> {
+		return this.postsService.getPostById(id);
 	}
 
 	@Patch('publish/:id')

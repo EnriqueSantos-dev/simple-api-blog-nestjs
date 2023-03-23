@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostInputDto, UpdatePostInputDto } from './dtos';
-import { PostModel } from './models/post.model';
-import { GetPostsOutputDto } from './dtos/get-posts-output.dto';
+import { PostOutputDto } from './dtos/post-output-dto';
 import { MapperPostToViewModel } from './mappers/mapper-post-to-view-model';
+import { PostModel } from './models/post.model';
 
 @Injectable()
 export class PostsService {
@@ -13,7 +13,7 @@ export class PostsService {
 		content,
 		title,
 		authorId,
-	}: CreatePostInputDto): Promise<PostModel> {
+	}: CreatePostInputDto & { authorId: string }): Promise<PostModel> {
 		return await this.prisma.post.create({
 			data: {
 				content,
@@ -30,7 +30,7 @@ export class PostsService {
 	}: UpdatePostInputDto & { id: string }): Promise<PostModel> {
 		const postExists = await this.prisma.post.findUnique({ where: { id } });
 
-		if (!postExists) throw new NotFoundException('Post not found');
+		if (!postExists) throw new NotFoundException('Post not founds');
 
 		return await this.prisma.post.update({
 			where: { id },
@@ -45,13 +45,20 @@ export class PostsService {
 		await this.prisma.post.delete({ where: { id } });
 	}
 
-	async getPostsByAuthorId(authorId: string): Promise<GetPostsOutputDto[]> {
+	async getPostsByAuthorId(
+		authorId: string,
+	): Promise<Omit<PostOutputDto, 'author'>[]> {
 		const posts = await this.prisma.post.findMany({
 			include: { author: true },
 			where: { authorId },
 		});
 
-		return posts.map((post) => MapperPostToViewModel.map(post));
+		return posts.map((post) => {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { author: _, ...postWithoutAuthor } =
+				MapperPostToViewModel.map(post);
+			return postWithoutAuthor;
+		});
 	}
 
 	async publishPost(id: string): Promise<void> {
@@ -66,7 +73,7 @@ export class PostsService {
 		});
 	}
 
-	async getAllPosts(): Promise<GetPostsOutputDto[]> {
+	async getAllPosts(): Promise<PostOutputDto[]> {
 		const posts = await this.prisma.post.findMany({
 			include: { author: true },
 		});
