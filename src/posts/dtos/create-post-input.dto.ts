@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreatePostInputDto {
 	@IsString()
@@ -9,7 +9,4 @@ export class CreatePostInputDto {
 	@IsString()
 	@IsNotEmpty()
 	content: string;
-
-	@IsUUID()
-	authorId: string;
 }
