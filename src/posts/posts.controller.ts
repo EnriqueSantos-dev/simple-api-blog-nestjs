@@ -39,7 +39,7 @@ export class PostsController {
 			id: post.id,
 			content: post.content,
 			title: post.title,
-			createAt: post.createdAt.toISOString(),
+			createdAt: post.createdAt.toISOString(),
 		};
 	}
 
@@ -54,8 +54,8 @@ export class PostsController {
 			id: post.id,
 			content: post.content,
 			title: post.title,
-			createAt: post.createdAt.toISOString(),
-			updateAt: post.updatedAt.toISOString(),
+			createdAt: post.createdAt.toISOString(),
+			updatedAt: post.updatedAt.toISOString(),
 		};
 	}
 
